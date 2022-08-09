@@ -6,14 +6,15 @@ import RideSelector from "@components/RideSelector";
 import { UberContext } from "@context/uberContext";
 // lib
 import { ethers } from "ethers";
+import toast from "react-hot-toast";
 // icon
 import { CgSpinner } from "react-icons/cg";
 
 const style = {
   wrapper: `flex-1 h-full flex flex-col justify-between scrollbar-hide`,
   rideSelectorContainer: `h-full flex flex-col overflow-scroll scrollbar-hide`,
-  confirmButtonContainer: ` border-t-2 cursor-pointer z-10`,
-  confirmButton: `bg-black text-white m-4 py-4 text-center text-xl`,
+  confirmButtonContainer: `flex justify-center border-t-2 cursor-pointer z-10`,
+  confirmButton: `bg-black text-white m-4 py-4 text-center text-xl w-full`,
   spinnerIcon: `w-6 h-6 mx-auto animate-spin`,
 };
 
@@ -27,10 +28,16 @@ const Confirm = () => {
     pickupCoordinates,
     dropoffCoordinates,
     metamask,
+    currentUser,
   } = useContext(UberContext);
   const [isLoading, setIsLoading] = useState(false);
 
   const storeTripDetails = async (pickup, dropoff) => {
+    if (currentUser.length === 0) {
+      toast.error("Please login using MetaMask");
+      return;
+    }
+
     setIsLoading(true);
     try {
       await metamask
@@ -61,19 +68,23 @@ const Confirm = () => {
           })
             .then((res) => {
               setIsLoading(false);
+              toast.success("Trip booked successfully");
             })
             .catch((err) => {
               console.log(err);
               setIsLoading(false);
+              toast.error("Something went wrong");
             });
         })
         .catch(async (err) => {
           console.log(err);
           setIsLoading(false);
+          toast.error("Something went wrong");
         });
     } catch (error) {
       console.error(error);
       setIsLoading(false);
+      toast.error("Something went wrong");
     }
   };
   return (
@@ -82,19 +93,17 @@ const Confirm = () => {
         {pickupCoordinates && dropoffCoordinates && <RideSelector />}
       </div>
       <div className={style.confirmButtonContainer}>
-        <div className={style.confirmButtonContainer}>
-          <div
-            className={style.confirmButton}
-            onClick={() => storeTripDetails(pickup, dropoff)}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <CgSpinner className={style.spinnerIcon} />
-            ) : (
-              <span>Confirm {selectedRide.service || "UberX"}</span>
-            )}
-          </div>
-        </div>
+        <button
+          className={style.confirmButton}
+          onClick={() => storeTripDetails(pickup, dropoff)}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <CgSpinner className={style.spinnerIcon} />
+          ) : (
+            <span>Confirm {selectedRide.service || "UberX"}</span>
+          )}
+        </button>
       </div>
     </div>
   );

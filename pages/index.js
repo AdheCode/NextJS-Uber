@@ -9,6 +9,7 @@ import Navbar from "@components/Navbar";
 import { MenuToggle } from "@components/MenuToggle";
 // lib
 import { motion, useCycle } from "framer-motion";
+import { Toaster } from "react-hot-toast";
 // util
 import { useDimensions } from "@utils/use-dimensions";
 
@@ -16,7 +17,7 @@ const style = {
   wrapper: `h-screen w-screen flex flex-col`,
   main: `h-full w-screen flex-1 z-10`,
   mapContainer: `flex-1 w-full h-full`,
-  rideRequestContainer: `h-full w-full md:w-[400px] md:ml-[1rem] py-[3rem] absolute top-0 left-0 flex flex-col justify-end z-20`,
+  rideRequestContainer: `h-full w-full md:w-[400px] md:ml-[1rem] py-[3rem] mt-10 md:mt-0 absolute top-0 left-0 flex flex-col justify-end z-20`,
   rideRequest: `h-full max-h-[700px] bg-white rounded-lg flex flex-col overflow-scroll scrollbar-hide`,
   background: `absolute top-20 left-0 bottom-8 w-full md:w-[420px] bg-white z-40 md:rounded-r-lg`,
 };
@@ -77,6 +78,7 @@ export default function Home() {
             </div>
           </div>
         </motion.div>
+        <Toaster />
       </div>
     </motion.nav>
   );
